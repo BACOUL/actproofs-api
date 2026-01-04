@@ -2,55 +2,41 @@
 //
 // ActSpec v0.1 — Offline Verification
 //
-// This module performs a STRICT, OFFLINE verification of an ActProof.
-// Network access is NOT required.
+// Performs STRICT, OFFLINE verification of an ActProof.
 //
-// VERIFICATION GUARANTEES:
-// - Spec version lock (anti-downgrade)
-// - Structural integrity
+// Guarantees:
+// - Spec version lock
+// - Structural validation
 // - Algorithm enforcement (Ed25519 only)
 // - RFC 8785 canonicalization
-// - Full payload signature coverage
+// - Full payload signature verification
 //
-// Any failure => proof is INVALID.
+// Any failure => INVALID proof.
 
 import * as ed from '@noble/ed25519';
-import { TextEncoder } from 'util';
-import { canonicalizePayload } from './canonicalize';
+import { TextEncoder } from 'node:util';
 
-// Canonical ActProof interface (ActSpec v0.1)
-export interface ActProof {
-  spec: 'actspec-v0.1';
-  id: string;
-  issued_at: string;
-  manifest_hash: string;
-  issuer: {
-    id: string;
-  };
-  signature: {
-    alg: 'Ed25519';
-    value: string; // hex-encoded signature
-  };
-}
+import { canonicalizePayload } from './canonicalize';
+import type { ActProof, VerificationResult } from './types';
 
 /**
- * Verify an ActProof (offline, cryptographic + logical checks).
+ * Verify an ActProof (offline).
  *
  * @param proof - ActProof object to verify
- * @param publicKeyHex - Issuer public key (hex, from .well-known)
- * @returns true if the proof is valid and compliant, false otherwise
+ * @param publicKeyHex - Issuer public key (hex-encoded)
+ * @returns VerificationResult
  */
 export async function verifyActProof(
   proof: ActProof,
   publicKeyHex: string
-): Promise<boolean> {
+): Promise<VerificationResult> {
   try {
-    // 1. SPEC VERSION LOCK
+    /* 1. SPEC VERSION LOCK */
     if (proof.spec !== 'actspec-v0.1') {
-      return false;
+      return { valid: false, reason: 'Invalid spec version' };
     }
 
-    // 2. STRUCTURAL INTEGRITY
+    /* 2. STRUCTURAL INTEGRITY */
     if (
       !proof.id ||
       !proof.issued_at ||
@@ -58,28 +44,38 @@ export async function verifyActProof(
       !proof.issuer?.id ||
       !proof.signature
     ) {
-      return false;
+      return { valid: false, reason: 'Malformed proof structure' };
     }
 
-    // 3. ALGORITHM ENFORCEMENT
+    /* 3. ALGORITHM ENFORCEMENT */
     if (proof.signature.alg !== 'Ed25519') {
-      return false;
+      return { valid: false, reason: 'Unsupported signature algorithm' };
     }
 
-    // 4. SEPARATE PAYLOAD FROM SIGNATURE
+    /* 4. SEPARATE PAYLOAD FROM SIGNATURE */
     const { signature, ...payload } = proof;
 
-    // 5. CANONICALIZATION (RFC 8785)
+    /* 5. CANONICALIZATION (RFC 8785) */
     const canonicalPayload = canonicalizePayload(payload);
 
-    // 6. CRYPTOGRAPHIC VERIFICATION
-    const messageBytes = new TextEncoder().encode(canonicalPayload);
+    /* 6. CRYPTOGRAPHIC VERIFICATION */
+    const encoder = new TextEncoder();
+    const messageBytes = encoder.encode(canonicalPayload);
+
     const signatureBytes = ed.etc.hexToBytes(signature.value);
     const publicKeyBytes = ed.etc.hexToBytes(publicKeyHex);
 
-    return await ed.verify(signatureBytes, messageBytes, publicKeyBytes);
+    const isValid = await ed.verify(
+      signatureBytes,
+      messageBytes,
+      publicKeyBytes
+    );
+
+    return isValid
+      ? { valid: true }
+      : { valid: false, reason: 'Invalid signature' };
   } catch {
     // Fail-safe: reject on any unexpected error
-    return false;
+    return { valid: false, reason: 'Verification error' };
   }
 }
