@@ -1,9 +1,13 @@
 // src/hash.ts
-//
-// ActSpec v0.1 — Hash Utilities
+import { createHash } from 'crypto';
+import canonicalize from 'canonicalize';
 
-import { createHash } from 'node:crypto';
+// L'export doit s'appeler EXACTEMENT 'hashPayload'
+export function hashPayload(payload: any): string {
+  // 1. Canonicalisation (JCS)
+  const canonical = canonicalize(payload);
+  if (!canonical) throw new Error("Canonicalization failed");
 
-export function sha256Hex(data: string): string {
-  return createHash('sha256').update(data).digest('hex');
+  // 2. Hash SHA-256
+  return createHash('sha256').update(canonical).digest('hex');
 }
