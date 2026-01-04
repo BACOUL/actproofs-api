@@ -28,22 +28,17 @@ export async function verifyActProof(
     }
 
     if (proof.signature.alg !== 'Ed25519') {
-      return { valid: false, reason: 'Unsupported signature algorithm' };
+      return { valid: false, reason: 'Unsupported algorithm' };
     }
 
     const { signature, ...payload } = proof;
-
     const canonicalPayload = canonicalizePayload(payload);
 
     const messageBytes = new TextEncoder().encode(canonicalPayload);
     const signatureBytes = ed.etc.hexToBytes(signature.value);
     const publicKeyBytes = ed.etc.hexToBytes(publicKeyHex);
 
-    const ok = await ed.verify(
-      signatureBytes,
-      messageBytes,
-      publicKeyBytes
-    );
+    const ok = await ed.verify(signatureBytes, messageBytes, publicKeyBytes);
 
     return ok ? { valid: true } : { valid: false, reason: 'Invalid signature' };
   } catch {
