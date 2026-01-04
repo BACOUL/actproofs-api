@@ -15,6 +15,7 @@
 // Any failure => proof is INVALID.
 
 import * as ed from '@noble/ed25519';
+import { TextEncoder } from 'util';
 import { canonicalizePayload } from './canonicalize';
 
 // Canonical ActProof interface (ActSpec v0.1)
