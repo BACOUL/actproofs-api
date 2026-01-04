@@ -1,13 +1,9 @@
 // src/index.ts
 //
-// ActSpec v0.1 — Public API Surface
+// ActSpec v0.1 — Public API
 //
-// This file defines the canonical exports of the
-// ActProofs reference implementation.
-//
-// NO business logic.
-// NO side effects.
-// NO environment assumptions.
+// Canonical export surface for the ActProofs reference implementation.
+// No side effects. No runtime assumptions.
 
 export * from './types';
 export * from './canonicalize';
