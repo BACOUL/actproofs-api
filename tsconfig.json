@@ -1,40 +1,28 @@
 {
   "compilerOptions": {
-    /* Language & runtime */
     "target": "ES2022",
     "lib": ["ES2022"],
     "module": "ES2022",
     "moduleResolution": "node",
 
-    /* Project structure */
     "rootDir": "./src",
     "outDir": "./dist",
 
-    /* Strictness (important for cryptographic code) */
     "strict": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
 
-    /* Interop */
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
 
-    /* Build quality */
     "declaration": true,
     "sourceMap": true,
     "removeComments": false,
 
-    /* Safety */
     "skipLibCheck": true
   },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "tests",
-    "node_modules",
-    "dist"
-  ]
+  "include": ["src/**/*.ts"],
+  "exclude": ["tests", "node_modules", "dist"]
 }
