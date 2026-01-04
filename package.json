@@ -1,7 +1,7 @@
 {
   "name": "actproofs-api",
   "version": "0.1.0",
-  "description": "Reference implementation of the ActSpec v0.1 standard for issuing and verifying cryptographic proofs of authorization.",
+  "description": "Reference implementation of the ActSpec v0.1 standard for verifying cryptographic proofs of authorization.",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -11,14 +11,12 @@
   "files": [
     "dist",
     "src",
-    "fixtures",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
     "build": "tsc",
-    "test": "node --test dist/tests/verify.test.js",
-    "test:ts": "ts-node tests/verify.test.ts",
+    "test": "node --test --loader ts-node/esm tests/verify.test.ts",
     "clean": "rm -rf dist"
   },
   "dependencies": {
