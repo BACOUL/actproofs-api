@@ -14,7 +14,7 @@
 // Any failure => INVALID proof.
 
 import * as ed from '@noble/ed25519';
-import { TextEncoder } from 'node:util';
+import { TextEncoder } from 'util';
 
 import { canonicalizePayload } from './canonicalize';
 import type { ActProof, VerificationResult } from './types';
@@ -41,7 +41,8 @@ export async function verifyActProof(
       !proof.id ||
       !proof.issued_at ||
       !proof.manifest_hash ||
-      !proof.issuer?.id ||
+      !proof.issuer ||
+      !proof.issuer.id ||
       !proof.signature
     ) {
       return { valid: false, reason: 'Malformed proof structure' };
@@ -59,9 +60,7 @@ export async function verifyActProof(
     const canonicalPayload = canonicalizePayload(payload);
 
     /* 6. CRYPTOGRAPHIC VERIFICATION */
-    const encoder = new TextEncoder();
-    const messageBytes = encoder.encode(canonicalPayload);
-
+    const messageBytes = new TextEncoder().encode(canonicalPayload);
     const signatureBytes = ed.etc.hexToBytes(signature.value);
     const publicKeyBytes = ed.etc.hexToBytes(publicKeyHex);
 
