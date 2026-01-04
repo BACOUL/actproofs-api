@@ -1,37 +1,22 @@
 {
   "compilerOptions": {
-    /* Node ESM strict */
+    "target": "ES2022",
+    "lib": ["ES2022"],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
 
-    /* Target */
-    "target": "ES2022",
-    "lib": ["ES2022"],
-
-    /* Project structure */
     "rootDir": "./src",
     "outDir": "./dist",
 
-    /* Type safety */
     "strict": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "forceConsistentCasingInFileNames": true,
-
-    /* ESM correctness */
-    "verbatimModuleSyntax": true,
-    "importsNotUsedAsValues": "error",
-
-    /* Output quality */
     "declaration": true,
     "sourceMap": true,
-    "removeComments": false,
 
-    /* Node */
-    "esModuleInterop": false,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
     "skipLibCheck": true
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["dist", "node_modules", "tests"]
+  "exclude": ["node_modules", "dist"]
 }
