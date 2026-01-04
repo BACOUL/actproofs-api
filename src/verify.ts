@@ -34,8 +34,8 @@ export async function verifyActProof(
     const { signature, ...payload } = proof;
 
     const canonicalPayload = canonicalizePayload(payload);
-    const messageBytes = new TextEncoder().encode(canonicalPayload);
 
+    const messageBytes = new TextEncoder().encode(canonicalPayload);
     const signatureBytes = ed.etc.hexToBytes(signature.value);
     const publicKeyBytes = ed.etc.hexToBytes(publicKeyHex);
 
