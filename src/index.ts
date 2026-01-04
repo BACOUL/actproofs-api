@@ -1,10 +1,22 @@
 // src/index.ts
 //
-// ActSpec v0.1 — Public API
+// ActProofs API — Public Entry Point
+// ActSpec v0.1 reference implementation
 //
-// Canonical export surface for the ActProofs reference implementation.
+// This file defines the ONLY public exports of the package.
+// Everything exported here MUST exist and compile.
 
-export * from './types';
-export * from './canonicalize';
-export * from './hash';
-export * from './verify';
+export type {
+  ActSpecVersion,
+  AuthorizationManifest,
+  ActProofPayload,
+  ActProofSignature,
+  ActProof,
+  VerificationResult,
+  ActSpecTestVector,
+  ActSpecTestSuite
+} from './types';
+
+export { canonicalizePayload } from './canonicalize';
+
+export { verifyActProof } from './verify';
