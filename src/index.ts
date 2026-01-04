@@ -1,17 +1,15 @@
-/*
- * ActProofs API — Public Entry Point
- * ActSpec v0.1
- *
- * This file defines the ONLY supported public surface of the library.
- * Internal files MUST NOT be imported directly by consumers.
- */
+// src/index.ts
+//
+// ActSpec v0.1 — Public API Surface
+//
+// This file defines the canonical exports of the
+// ActProofs reference implementation.
+//
+// NO business logic.
+// NO side effects.
+// NO environment assumptions.
 
-// Public types (normative)
-export type {
-  ActProof,
-  ActProofSignature,
-  IssuerDescriptor,
-} from './types';
-
-// Public verification function (normative)
-export { verifyActProof } from './verify';
+export * from './types';
+export * from './canonicalize';
+export * from './hash';
+export * from './verify';
