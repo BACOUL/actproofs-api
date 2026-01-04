@@ -1,8 +1,3 @@
-// src/index.ts
-//
-// ActProofs API — Public Entry Point
-// ActSpec v0.1
-
 export type {
   ActSpecVersion,
   AuthorizationManifest,
