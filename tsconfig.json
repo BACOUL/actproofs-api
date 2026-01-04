@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["ES2022", "DOM"],
+    "lib": ["ES2022"],
     "module": "ES2022",
     "moduleResolution": "node",
 
@@ -21,8 +21,9 @@
     "sourceMap": true,
     "removeComments": false,
 
-    "types": ["node"],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+
+    "types": ["node"]
   },
   "include": ["src/**/*.ts"],
   "exclude": ["tests", "node_modules", "dist"]
