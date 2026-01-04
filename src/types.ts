@@ -58,7 +58,17 @@ export interface ActProof extends ActProofPayload {
 }
 
 /**
- * Verification result (optional helper type)
+ * Issuer descriptor (out-of-band trust anchor)
+ * NOT embedded in the proof itself.
+ */
+export interface IssuerDescriptor {
+  id: string;
+  name?: string;
+  public_key: string; // hex-encoded Ed25519 public key
+}
+
+/**
+ * Verification result (helper type)
  */
 export interface VerificationResult {
   valid: boolean;
