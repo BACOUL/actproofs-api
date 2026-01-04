@@ -14,10 +14,10 @@
 // Any failure => INVALID proof.
 
 import * as ed from '@noble/ed25519';
-import { TextEncoder } from 'util';
+import { TextEncoder } from 'node:util';
 
-import { canonicalizePayload } from './canonicalize';
-import type { ActProof, VerificationResult } from './types';
+import { canonicalizePayload } from './canonicalize.js';
+import type { ActProof, VerificationResult } from './types.js';
 
 /**
  * Verify an ActProof (offline).
@@ -38,12 +38,11 @@ export async function verifyActProof(
 
     /* 2. STRUCTURAL INTEGRITY */
     if (
-      !proof.id ||
-      !proof.issued_at ||
-      !proof.manifest_hash ||
-      !proof.issuer ||
-      !proof.issuer.id ||
-      !proof.signature
+      typeof proof.id !== 'string' ||
+      typeof proof.issued_at !== 'string' ||
+      typeof proof.manifest_hash !== 'string' ||
+      typeof proof.issuer?.id !== 'string' ||
+      typeof proof.signature?.value !== 'string'
     ) {
       return { valid: false, reason: 'Malformed proof structure' };
     }
@@ -53,14 +52,16 @@ export async function verifyActProof(
       return { valid: false, reason: 'Unsupported signature algorithm' };
     }
 
-    /* 4. SEPARATE PAYLOAD FROM SIGNATURE */
+    /* 4. DETACH SIGNATURE */
     const { signature, ...payload } = proof;
 
     /* 5. CANONICALIZATION (RFC 8785) */
     const canonicalPayload = canonicalizePayload(payload);
 
     /* 6. CRYPTOGRAPHIC VERIFICATION */
-    const messageBytes = new TextEncoder().encode(canonicalPayload);
+    const encoder = new TextEncoder();
+    const messageBytes = encoder.encode(canonicalPayload);
+
     const signatureBytes = ed.etc.hexToBytes(signature.value);
     const publicKeyBytes = ed.etc.hexToBytes(publicKeyHex);
 
